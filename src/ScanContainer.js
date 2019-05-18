@@ -1,14 +1,25 @@
 import React from 'react';
 import ScanList from './ScanList';
-import {createScanData, createUserData} from './data'
-
+import {createScanData, createUserData} from './data';
+import UniqueId from 'react-html-id';
 
 class ScanContainer extends React.Component {
 
-    state = {
-        scans: createScanData(),
-        users: createUserData(),
-    };
+    constructor(props) {
+        super(props);
+        UniqueId.enableUniqueIds(this);
+
+        this.state = {
+            scans: createScanData().map(scan => {
+                scan.id = this.nextUniqueId();
+                return scan
+            }),
+            users: createUserData(),
+            direction: {
+                name: 'asc'
+            }
+        }
+    }
 
     render() {
         return (
@@ -16,6 +27,7 @@ class ScanContainer extends React.Component {
                 <ScanList
                     scans={this.state.scans}
                     users={this.state.users}
+                    direction={this.state.direction}
                 />
             </div>
         );
